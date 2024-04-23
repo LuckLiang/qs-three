@@ -1,17 +1,17 @@
 {
   "name": "l-three",
-  "version": "1.0.101",
+  "version": "1.0.102",
   "description": "基于Three.js的二次封装以满足快速搭建数字孪生场景项目",
   "main": "index.js",
   "exports": {
     ".": {
       "import": "./index.js"
     },
-    "./fonts/*": "./node_modules/three/examples/fonts/*",
-    "./jsm/*": "./node_modules/three/examples/jsm/*",
-    "./addons": "./node_modules/three/examples/jsm/Addons.js",
-    "./addons/*": "./node_modules/three/examples/jsm/*",
-    "./nodes": "./node_modules/three/examples/jsm/nodes/Nodes.js"
+    "./fonts/*": "three/examples/fonts/*",
+    "./jsm/*": "three/examples/jsm/*",
+    "./addons": "three/examples/jsm/Addons.js",
+    "./addons/*": "three/examples/jsm/*",
+    "./nodes": "three/examples/jsm/nodes/Nodes.js"
   },
   "scripts": {
     "build": "vite build",
