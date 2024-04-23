@@ -2,7 +2,6 @@
   "name": "l-three",
   "version": "1.0.0",
   "description": "基于Three.js的二次封装以满足快速搭建数字孪生场景项目",
-  "private": "false",
   "main": "index.js",
   "exports": {
     ".": {
