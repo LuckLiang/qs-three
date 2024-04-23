@@ -1,4 +1,4 @@
-import { GLTFLoader } from "three/jsm/loaders/GLTFLoader.js";
+import { GLTFLoader } from "l-three/jsm/loaders/GLTFLoader.js";
 
 class LGLTFLoader extends GLTFLoader {
     constructor(options) {

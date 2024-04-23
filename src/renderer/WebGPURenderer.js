@@ -1,5 +1,5 @@
-import WebGPU  from 'three/jsm/capabilities/WebGPU.js';
-import WebGPURenderer from 'three/jsm/renderers/webgpu/WebGPURenderer.js';
+import WebGPU  from 'l-three/jsm/capabilities/WebGPU.js';
+import WebGPURenderer from 'l-three/jsm/renderers/webgpu/WebGPURenderer.js';
 
 class LWebGPURenderer extends WebGPURenderer {
     constructor(options) {        
