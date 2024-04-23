@@ -22,5 +22,8 @@
   "keywords": "three three.js",
   "dependencies": {
     "three": "^0.163.0"
+  },
+  "devDependencies": {
+    "three": "^0.163.0"
   }
 }
