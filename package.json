@@ -7,11 +7,11 @@
     ".": {
       "import": "./index.js"
     },
-    "./fonts/*": "three/examples/fonts/*",
-    "./jsm/*": "three/examples/jsm/*",
-    "./addons": "three/examples/jsm/Addons.js",
-    "./addons/*": "three/examples/jsm/*",
-    "./nodes": "three/examples/jsm/nodes/Nodes.js"
+    "./fonts/*": "../three/examples/fonts/*",
+    "./jsm/*": "../three/examples/jsm/*",
+    "./addons": "../three/examples/jsm/Addons.js",
+    "./addons/*": "../three/examples/jsm/*",
+    "./nodes": "../three/examples/jsm/nodes/Nodes.js"
   },
   "scripts": {
     "build": "vite build",
