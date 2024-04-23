@@ -1,0 +1,56 @@
+{
+    "recurseDepth": 3,
+    "source": {
+        "include": [
+            "src/"
+        ],
+        "includePattern": ".+\\.js(doc|x)?$",
+        "exclude": [
+            "src/libs"
+        ]
+    },
+    "plugins": [
+        "plugins/markdown"
+    ],
+    "markdown": {
+        "tags": [
+            "file"
+        ],
+        "excludeTags": [
+            "author"
+        ],
+        "parser": "gfm",
+        "hardwrap": true
+    },
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false,
+        "dateFormat": "ddd MMM Do YYYY",
+        "outputSourceFiles": false,
+        "outputSourcePath": false,
+        "systemName": "HengYuan Map API",
+        "footer": "",
+        "copyright": "&copy; <a href='http://www.hy9909.cn/' target='_blank'>恒源水务</a>",
+        "navType": "inline",
+        "theme": "Cerulean",
+        "linenums": true,
+        "collapseSymbols": false,
+        "inverseNav": true,
+        "protocol": "html://",
+        "methodHeadingReturns": false,
+        "sort": false
+    },
+    "opts": {
+        "template": "D:\\nvm\\v20.10.0\\node_modules\\docdash",
+        "encoding": "utf8",
+        "destination": "./docs/",
+        "recurse": true,
+        "readme": "README.md"
+    },
+    "docdash": {
+        "search": true,
+        "navLevel": 2,
+        "collapse": true,
+        "verbose": true
+    }
+}
