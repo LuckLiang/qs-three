@@ -9,6 +9,11 @@
 - 灯光为 AmbientLight*1、DirectionalLight*4、HemisphereLight\*1
 - 渲染器默认为 WebGLRenderer
 
+# 开发计划
+
+- 支持数据面板插入
+- 支持第一/三人称控制器
+
 # 安装
 
 ```
