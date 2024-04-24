@@ -1,4 +1,4 @@
-import WebGL from 'l-three/jsm/capabilities/WebGL.js';
+import WebGL from 'three/examples/jsm/capabilities/WebGL.js';
 import { WebGLRenderer } from 'three';
 
 class LWebGLRenderer extends WebGLRenderer {

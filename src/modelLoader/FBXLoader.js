@@ -1,6 +1,6 @@
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 
-class LGLTFLoader extends GLTFLoader {
+class LFBXLoader extends FBXLoader {
     constructor(options) {
         super()
         this.init(options)
@@ -12,4 +12,4 @@ class LGLTFLoader extends GLTFLoader {
 
 }
 
-export default LGLTFLoader
+export default LFBXLoader

@@ -1,4 +1,4 @@
-import { OrbitControls } from 'l-three/jsm/controls/OrbitControls.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 class LOrbitControls extends OrbitControls {
     constructor(camera,domElement) {

@@ -4,6 +4,7 @@ import { LScene as Scene } from "./scene/index";
 import { GLTFLoader } from './modelLoader';
 import { OrbitControls } from './controls';
 import * as THREE from 'three';
+import Stats from 'three/examples/jsm/libs/stats.module.js';
 
 /**
  * @class QsThree
@@ -13,9 +14,10 @@ import * as THREE from 'three';
  * @param {object} options 配置属性
  * @param {string} options.modelUrl 模型地址，目前默认加载方式为GLTFLoader
  * @param {boolean} options.isGPU 是否开启WebGPU渲染,默认以WebGL渲染
+ * @param {boolean} options.isDebug 是否开启Stats面板
  * @param {number|string} options.background=0x000000 初始化场景背景
  * @param {number|string} options.skyColor=0x505555 天空颜色
- * @param {number|string} options.rotationSpeed=0.01 旋转速度 正数为逆时针旋转，负数为顺时针旋转
+ * @param {number} options.rotationSpeed=4 旋转速度 默认值为4.0，相当于在60fps时每旋转一周需要15秒
  * @param {array} options.cameraPos=[0, 60, 100] 相机初始位置
  * @param {object} options.scene 场景配置
  * @param {number} options.scene.backgroundBlurriness=null 设置背景的模糊度,仅影响分配给Scene.background的环境贴图。有效的输入是0到1之间。
@@ -33,16 +35,22 @@ class QsThree {
 
         this.container = container;
         this._initOptions(options)
+        if (options.isDebug) {
+            this.stats = new Stats();
+            container.appendChild( this.stats.dom );
+        }
+
+        this._init(options);
         if (options.modelUrl) {
             this._loadModel(options.modelUrl)
         }
-        this._init(options);
         this._addSky()
         this._loadControls()
+        this.animate()
     }
     // 初始化参数
     _initOptions(options) {        
-        const {background=0x000000, skyColor=0x505555, cameraPos=[0, 60, 100], _rotationSpeed = 0.01} = options
+        const {background=0x000000, skyColor=0x505555, cameraPos=[0, 100, 100], _rotationSpeed = 4} = options
         this._groundColor = new THREE.Color(background)
         this._skyColor = new THREE.Color(skyColor)
         this._cameraPos = cameraPos
@@ -54,7 +62,6 @@ class QsThree {
         // 初始化场景
         this.scene = new Scene();
         this.scene.background = this._groundColor;
-        
         if (scene) {
             const { backgroundBlurriness = null, environment = null, fog = null, overrideMaterial = null} = scene
             this.scene.backgroundBlurriness = backgroundBlurriness;
@@ -79,7 +86,7 @@ class QsThree {
             this._isGPU = options.isGPU
             this.renderer = new Renderer.WebGPURenderer({antialias: true});
         } else  if (this.isAvailableSys().indexOf("WebGL") >= 0) {
-            this.renderer = new Renderer.WebGLRenderer();
+            this.renderer = new Renderer.WebGLRenderer({ antialias: true });
         }
         this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);//设置渲染区域尺寸
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -93,9 +100,18 @@ class QsThree {
     _addSky() {      
         const ambientLight = new THREE.AmbientLight(0xffffff, .1); // 白光，强度为1
         this.scene.add(ambientLight);
-        const dirLight = new THREE.DirectionalLight('rgb(253,253,253)', 5);
-        dirLight.position.set(10, 10, 5); // 根据需要自行调整位置
-        this.scene.add(dirLight);
+        const dirLight1 = new THREE.DirectionalLight('rgb(253,253,253)', 2);
+        const dirLight2 = new THREE.DirectionalLight('rgb(253,253,253)', 2);
+        const dirLight3 = new THREE.DirectionalLight('rgb(253,253,253)', 2);
+        const dirLight4 = new THREE.DirectionalLight('rgb(253,253,253)', 2);
+        dirLight1.position.set(60, 60, 60); // 根据需要自行调整位置
+        dirLight2.position.set(60, 60, -60); // 根据需要自行调整位置
+        dirLight3.position.set(-60, 60, 60); // 根据需要自行调整位置
+        dirLight4.position.set(-60, 60, -60); // 根据需要自行调整位置
+        this.scene.add(dirLight1);
+        this.scene.add(dirLight2);
+        this.scene.add(dirLight3);
+        this.scene.add(dirLight4);
         this.scene.add( new THREE.HemisphereLight( this._skyColor.value, this._groundColor.value, .1 ) );
     }
     // 加载模型
@@ -119,6 +135,8 @@ class QsThree {
     _loadControls() {
         this.controls = new OrbitControls(this.camera, this.renderer.domElement)
         this.controls.minDistance = 2;
+        this.controls.autoRotate = true
+        this.controls.autoRotateSpeed = this._rotationSpeed
     }
 }
 
@@ -145,16 +163,22 @@ QsThree.prototype.animate = function() {
         renderScene()
         function renderScene() {
             requestAnimationFrame(renderScene);
-            if(self._sceneGLTF) self._sceneGLTF.rotation.y += self._rotationSpeed
+            self.stats && self.stats.update();
+            self.controls.update()
             if (self._isGPU) {
                 self.renderer.renderAsync(self.scene, self.camera);
             } else {
-                self.renderer.render( self.scene, self.camera );
+                self.renderer.render(self.scene, self.camera);
             }
         }
     }
     play(self)
 }
+QsThree.prototype.onWindowResized = function(self) {
+    self.renderer.setSize( self.container.offsetWidth, self.container.offsetHeight );
 
+    self.camera.aspect = self.container.offsetWidth / self.container.offsetHeight;
+    self.camera.updateProjectionMatrix();
+}
 export { QsThree };
 export { THREE } ;
