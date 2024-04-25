@@ -3,8 +3,11 @@ import * as Renderer from "./renderer/index";
 import { LScene as Scene } from "./scene/index";
 import { GLTFLoader } from './modelLoader/index';
 import { OrbitControls } from './controls/index';
-import * as THREE from 'three';
+import Eventable from './core/Eventable';
+
+
 import Stats from 'three/examples/jsm/libs/stats.module.js';
+import * as THREE from 'three';
 
 /**
  * @class QsThree
@@ -22,6 +25,7 @@ import Stats from 'three/examples/jsm/libs/stats.module.js';
  * @param {number} options.customLoading.xhr.total 总数据量
  * @param {number|string} options.background=0x000000 初始化场景背景
  * @param {number|string} options.skyColor=0x505555 天空颜色
+ * @param {number} options.isRotation=false 开启旋转
  * @param {number} options.rotationSpeed=4 旋转速度 默认值为4.0，相当于在60fps时每旋转一周需要15秒
  * @param {array} options.cameraPos=0,0,0 相机初始位置
  * @param {object} options.scene 场景配置
@@ -40,12 +44,13 @@ class QsThree {
     #sceneGLTF
     #isShowLoading
     #customLoading
+    #isRotation
     constructor(container, options) {
         if ( Renderer.WebGPU.isAvailable() === false && Renderer.WebGL.isWebGL2Available() === false ) {
             container.appendChild( Renderer.WebGPU.getErrorMessage() );
             throw new Error( 'No WebGPU or WebGL2 support' );
         }
-
+        Object.assign(this, Eventable)
         this.container = container;
         this.#initOptions(options)
         if (options.isDebug) {
@@ -63,15 +68,24 @@ class QsThree {
         this.animate = this.#animate()
         this.animate.Play()
         // 添加事件监听器
-        window.addEventListener('resize', () => { this.#onWindowResized(this);});
+        window.addEventListener('resize', () => { 
+            this.#onWindowResized(this);
+            this.emit('onWindowReset')
+         });
+        
+        this.getModel = function () {
+            return this.#sceneGLTF
+        }
     }
+
     // 初始化参数
     #initOptions(options) {
-        const {background=0x000000, skyColor=0x505555, cameraPos=[0, 0, 0], _rotationSpeed = 4} = options
+        const {background=0x000000, skyColor=0x505555, cameraPos=[0, 0, 0], isRotation= false, rotationSpeed = 4} = options
         this.#groundColor = new THREE.Color(background)
         this.#skyColor = new THREE.Color(skyColor)
         this.#cameraPos = cameraPos
-        this.#rotationSpeed = _rotationSpeed
+        this.#isRotation = isRotation
+        this.#rotationSpeed = rotationSpeed
     }
     // 初始化场景
     #init(options) {
@@ -90,7 +104,7 @@ class QsThree {
         const width = this.container.offsetWidth; //窗口宽度
         const height = this.container.offsetHeight; //窗口高度
         const k = width / height; //窗口宽高比
-        const s = 90; //三维场景显示范围控制系数，系数越大，显示的范围越大
+        const s = 75; //三维场景显示范围控制系数，系数越大，显示的范围越大
 
         //初始化相机
         this.camera = new Camera(s, k, 0.1, 1000)
@@ -140,9 +154,15 @@ class QsThree {
             success(gltf) {
                 self.#sceneGLTF = gltf.scene
                 self.scene.add(gltf.scene)
-                loadingDom&&self.container.removeChild(loadingDom)
+                loadingDom && self.container.removeChild(loadingDom)
+                /**
+                 * 模型加载完成事件
+                 * @event QsThree#ModeLoaded
+                 */
+                self.emit('ModeLoaded', gltf)
             },
             process({ loaded, total }) {
+                self.emit('ModeLoading', { loaded, total })
                 if (self.#isShowLoading&&!self.#customLoading) {
                     loadingDom&&self.container.removeChild(loadingDom)
                     loadingDom = self.#createLoadingDom({ loaded, total })
@@ -206,7 +226,7 @@ class QsThree {
     #loadControls() {
         this.controls = new OrbitControls(this.camera, this.renderer.domElement)
         this.controls.minDistance = 2;
-        this.controls.autoRotate = true
+        this.controls.autoRotate = this.#isRotation
         this.controls.autoRotateSpeed = this.#rotationSpeed
     }    
     /**
@@ -217,6 +237,7 @@ class QsThree {
         function renderScene() {
             self.stats && self.stats.update();
             self.controls.update()
+            self._RenderAnimate&&self._RenderAnimate()
             if (self.#isGPU) {
                 self.renderer.renderAsync(self.scene, self.camera);
             } else {
@@ -266,6 +287,7 @@ class QsThree {
 
 /**
  * 判断当前浏览器是否支持'WebGPU','WebGL'渲染
+ * @event QsThree#isAvailableSys
  * @returns 返回浏览器支持的渲染器 undefined | ['WebGPU','WebGL']
  */
 QsThree.prototype.isAvailableSys = function () {
@@ -279,5 +301,43 @@ QsThree.prototype.isAvailableSys = function () {
     return AvailableSys.length>0?AvailableSys:undefined
 }
 
+/**
+ * 设置渲染器
+ * @event QsThree#setRenderer
+ * @param {Renderer} renderer 
+ */
+QsThree.prototype.setRenderer = function (renderer) {
+    this.renderer = renderer
+}
+/**
+ * 获取渲染器
+ * @event QsThree#getRenderer
+ * @return {Renderer} 当前渲染器 renderer 
+ */
+QsThree.prototype.getRenderer = function () {
+    return this.renderer
+}
+/**
+ * 获取渲染器
+ * @event QsThree#getScene
+ * @return {Scene} scene 当前场景 scene
+ */
+QsThree.prototype.getScene = function () {
+    return this.scene
+}
+/**
+ * 需要渲染的动画
+ * @param {function} func 
+ */
+QsThree.prototype.addRenderAnimate = function (func) {
+    try {
+        if (typeof func !== 'function') throw 'param is not a function'
+        this._RenderAnimate = func
+    } catch (error) {
+        console.error(error)
+    }
+}
 export { QsThree };
+    
+export * from './plugins/index'
 export { THREE } ;
