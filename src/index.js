@@ -70,9 +70,16 @@ class QsThree {
         // 添加事件监听器
         window.addEventListener('resize', () => { 
             this.#onWindowResized(this);
+            /**
+             * 窗口变化事件
+             * @event QsThree#onWindowReset
+             */
             this.emit('onWindowReset')
          });
-        
+        /**
+         * 获取已加载模型
+         * @returns 模型
+         */
         this.getModel = function () {
             return this.#sceneGLTF
         }
@@ -162,6 +169,10 @@ class QsThree {
                 self.emit('ModeLoaded', gltf)
             },
             process({ loaded, total }) {
+                /**
+                 * 模型加载中事件
+                 * @event QsThree#ModeLoading
+                 */
                 self.emit('ModeLoading', { loaded, total })
                 if (self.#isShowLoading&&!self.#customLoading) {
                     loadingDom&&self.container.removeChild(loadingDom)

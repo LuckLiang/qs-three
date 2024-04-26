@@ -1,2 +1,2 @@
-import * as LThree  from './src/index';
-export default LThree
+import * as QsThree  from './src/index';
+export default QsThree

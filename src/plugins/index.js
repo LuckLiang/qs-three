@@ -1,5 +1,6 @@
-import ElfElements from './elfElements'
+import ElfElements from './ElfElements'
+import ModelPicker from './ModelPicker'
 
 export {
-    ElfElements
+    ElfElements,ModelPicker
 }
