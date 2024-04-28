@@ -41,3 +41,7 @@ onMounted(() => {
   QsThree.animate();
 });
 ```
+
+# 预览
+
+![展示](./preview/Light.gif)

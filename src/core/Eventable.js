@@ -1,4 +1,4 @@
-export default (function(params) {
+export default (function (params) {
     let _events={}
     return {
         emit(eventName, data) {
