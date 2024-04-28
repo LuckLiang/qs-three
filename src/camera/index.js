@@ -1,7 +1,7 @@
 import { PerspectiveCamera } from 'three';
 export class LCamera extends PerspectiveCamera {
-    constructor(options) {        
-        super(options)
+    constructor(fov, aspect, near, far) {        
+        super(fov, aspect, near, far)
     }
 }
 export default LCamera;

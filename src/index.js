@@ -112,10 +112,8 @@ class QsThree {
         const height = this.container.offsetHeight; //窗口高度
         const k = width / height; //窗口宽高比
         const s = 75; //三维场景显示范围控制系数，系数越大，显示的范围越大
-
         //初始化相机
         this.camera = new Camera(s, k, 0.1, 1000)
-        this.camera.rotation.order = 'YXZ';
         this.camera.position.set(this.#cameraPos[0],this.#cameraPos[1],this.#cameraPos[2]);
         this.camera.lookAt(this.scene.position);
         
@@ -199,6 +197,7 @@ class QsThree {
             },
         })
     }
+
     #createLoadingDom({ loaded, total }) {
         const loadingDom = document.createElement('div');
         loadingDom.className='loading'
@@ -233,12 +232,14 @@ class QsThree {
 
         return loadingDom
     }
+
     // 加载控制器
     #loadControls() {
         this.controls = new OrbitControls(this.camera, this.renderer.domElement)
         this.controls.minDistance = 2;
         this.controls.autoRotate = this.#isRotation
         this.controls.autoRotateSpeed = this.#rotationSpeed
+        this.controls.maxPolarAngle = Math.PI * 0.5;
     }    
     /**
      * 场景动画
