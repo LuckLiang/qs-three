@@ -122,11 +122,19 @@ class PlayerController extends EventDispatcher {
     );
     document.addEventListener("keydown", (event) => {
       keyStates[event.code] = true;
+      /**
+       * @event PlayerController#keyDown
+       * 键盘按下事件
+       */
       this.dispatchEvent(_keyDownEvent)
     });
 
     document.addEventListener("keyup", (event) => {
       keyStates[event.code] = false;
+      /**
+       * @event PlayerController#keyUph
+       * 键盘弹起事件
+       */
       this.dispatchEvent(_keyUpEvent)
     });
   }
