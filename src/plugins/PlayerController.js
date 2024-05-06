@@ -7,6 +7,8 @@ const GRAVITY = 50;
 const _changeEvent = { type: "change" };
 const _lockEvent = { type: "lock" };
 const _unlockEvent = { type: "unlock" };
+const _keyDownEvent = { type: "keyDown" };
+const _keyUpEvent = { type: "keyUp" };
 const _walkEvent = { type: "walk" };
 const _jumpEvent = { type: "jump" };
 const _switchPerspective = { type: "switch" };
@@ -120,10 +122,12 @@ class PlayerController extends EventDispatcher {
     );
     document.addEventListener("keydown", (event) => {
       keyStates[event.code] = true;
+      this.dispatchEvent(_keyDownEvent)
     });
 
     document.addEventListener("keyup", (event) => {
       keyStates[event.code] = false;
+      this.dispatchEvent(_keyUpEvent)
     });
   }
 
