@@ -18,7 +18,7 @@ import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
  * @param {number} [options.radius=0] 发光半径 0-1
  * @param {boolean} [options.isOpenGUI=false] 开启GUI 
 */
-
+let gui
 class DeviceLight{
     #composer
     #bloomPass
@@ -78,19 +78,22 @@ class DeviceLight{
          * @param {boolean} [options.isOpenGUI=false] 开启GUI 
          */
         this.setOptions = function (options) {
-            let {threshold, strength, radius} = this.#options = {options}
+            let {threshold, strength, radius, isOpenGUI} = this.#options = {options}
             this.#composer.threshold=Number(threshold)
             this.#composer.strength=Number(strength)
             this.#composer.radius = Number(radius)
+            this.#options.isOpenGUI = isOpenGUI
             if (this.#options.isOpenGUI) {
                 this.#addGUI()
+            } else {
+                gui.destroy();
             }
         }
     }      
     }
     
     #addGUI() {
-        const gui = new GUI();
+        gui = new GUI();
         const params = {threshold:this.#options.threshold, strength:this.#options.strength, radius:this.#options.radius}
         const bloomFolder = gui.addFolder("bloom");
         const self = this

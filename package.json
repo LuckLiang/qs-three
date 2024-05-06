@@ -1,6 +1,6 @@
 {
   "name": "qs-three",
-  "version": "1.0.111",
+  "version": "1.0.113",
   "description": "基于Three.js的二次封装以满足快速搭建数字孪生场景项目",
   "main": "index.js",
   "exports": {

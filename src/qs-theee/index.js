@@ -45,6 +45,8 @@ class QsThree {
     #isShowLoading
     #customLoading
     #isRotation
+    #clock = new THREE.Clock();
+
     constructor(container, options) {
         if ( Renderer.WebGPU.isAvailable() === false && Renderer.WebGL.isWebGL2Available() === false ) {
             container.appendChild( Renderer.WebGPU.getErrorMessage() );
@@ -55,6 +57,8 @@ class QsThree {
         this.#initOptions(options)
         if (options.isDebug) {
             this.stats = new Stats();
+            this.stats.domElement.style.position = 'absolute'
+            this.stats.domElement.classList.add('stats-box')
             container.appendChild( this.stats.dom );
         }
         this.#isShowLoading = options.isShowLoading || false
@@ -248,7 +252,7 @@ class QsThree {
         let self = this, animationId = null
         function renderScene() {
             self.stats && self.stats.update();
-            self.controls.update()
+            self.controls.update(self.#clock.getDelta())
             if (self.#isGPU) {
                 self.renderer.renderAsync(self.scene, self.camera);
             } else {
@@ -349,7 +353,14 @@ QsThree.prototype.addRenderAnimate = function (func) {
         console.error(error)
     }
 }
+/**
+ * 设置Controls
+ * @param {Controls} controls 
+ */
+QsThree.prototype.setControls = function (controls) {
+    this.controls = controls
+}
 export { QsThree };
     
 export * from '../plugins/index'
-export { THREE } ;
+export { THREE, GLTFLoader } ;

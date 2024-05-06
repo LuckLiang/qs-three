@@ -74,7 +74,7 @@ class ModelPicker extends EventDispatcher {
         // 可选：设置默认拾取选项
         this.pickOptions = {
             recursive: true, // 是否递归检查子对象
-            layers: undefined, // 指定要拾取的层，默认为所有层
+            layers: [], // 指定要拾取的层，默认为所有层
         };
         this.bindEvents()
     }
@@ -90,33 +90,39 @@ class ModelPicker extends EventDispatcher {
         const canvas = this.renderer.domElement;
         // 将屏幕坐标转换为标准化设备坐标
         this.mouse.x = (event.clientX / canvas.clientWidth) * 2 - 1;
-        this.mouse.y = -(event.clientY / canvas.clientHeight) * 2 + 1;        
+        this.mouse.y = -(event.clientY / canvas.clientHeight) * 2 + 1;
         this.performPick();
     }
     performPick() {
         this.raycaster.setFromCamera(this.mouse, this.camera);
-        const intersects = this.raycaster.intersectObjects(this.scene.children, this.pickOptions.recursive, this.pickOptions.layers);
+        const intersects = this.raycaster.intersectObjects(this.scene.children, this.pickOptions.recursive);
         if (intersects.length > 0) {
-            this.lastSelectedObject = intersects[0].object;
-            const intersectionPoint = intersects[0].point;
-            const eventDetails = {
-              object: this.lastSelectedObject,
-              point: intersectionPoint,
-              intersection: intersects[0], // 可以提供完整的交点信息
-            };
-            /**
-             * 选中物体事件
-             * @event ModelPicker#objectSelected
-             */
-            this.dispatchEvent({ type: 'objectSelected', detail: eventDetails });
+            const pickedObject = intersects[0].object;
+            // 检查对象所属的图层是否在可选图层内
+            if (
+                this.pickOptions.layers.length === 0 ||
+                this.pickOptions.layers.some(layer => pickedObject.layers.has(layer))
+            ) {
+                
+                /**
+                 * 选中物体事件
+                 * @event ModelPicker#objectSelected
+                 */
+                this.dispatchEvent({
+                    type: 'objectSelected',
+                    detail: {
+                        object: pickedObject,
+                        point: intersects[0].point,
+                    },
+                });
+            }
         } else {
             // 如果没有交点，则取消选中任何物体
             /**
              * 未选中物体事件
              * @event ModelPicker#objectDeselected
              */
-            this.dispatchEvent({ type: 'objectDeselected', detail: this.lastSelectedObject });
-            this.lastSelectedObject = null
+            this.dispatchEvent({ type: 'objectDeselected'});
         }
     }
 }
@@ -139,12 +145,14 @@ ModelPicker.prototype.disable = function() {
     }
 }
 /**
- * 设置拾取参数
- * @param recursive=true 是否递归检查子对象
- * @param layers=undefined 指定要拾取的层，默认为所有层
+ * 设置当前的拾取选项
+ * @param {Object} options 
+ * @param {Boolean} [options.recursive=true] 是否递归检查子对象
+ * @param {Number[]} [options.layers=[]] 指定要拾取的层，默认为所有层
  */
-ModelPicker.prototype.setPickOptions = function(options) {
-    Object.assign(this.pickOptions, options);
+ModelPicker.prototype.setPickOptions = function(options={}) {
+    this.pickOptions.recursive = options.recursive !== undefined ? options.recursive : true;
+    this.pickOptions.layers = options.layers || [];
 }
 
 export default ModelPicker

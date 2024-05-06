@@ -6,7 +6,7 @@ class LGLTFLoader extends GLTFLoader {
         this.init(options)
     }
     init(options) {
-        const {url,success,process,fail} = options
+        const {url,success=function(){},process=function(){},fail=function(){}} = options
         this.load( url, (res) => success(res), (res) => process(res), (error) => fail(error));
     }
 

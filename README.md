@@ -22,7 +22,7 @@
 # 安装
 
 ```
-npm install l-three
+npm install qs-three
 ```
 
 # 使用
@@ -31,10 +31,10 @@ npm install l-three
 
 ```
 // 此示例是Vue3版本,Vue2 同理
-import LThree from "l-three";
+import QSTHREE from "qs-three";
 
 onMounted(() => {
-  const QsThree = new LThree.QsThree(content3d.value, {
+  const QsThree = new QSTHREE.QsThree(content3d.value, {
     modelUrl: "http://localhost:8090/model/factory/factory.gltf",
     isGUP: true,
   });
