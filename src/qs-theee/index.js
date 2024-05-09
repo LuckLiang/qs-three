@@ -2,6 +2,7 @@ import { LCamera as Camera } from "./camera/index";
 import * as Renderer from "./renderer/index";
 import { LScene as Scene } from "./scene/index";
 import { GLTFLoader } from './modelLoader/index';
+import SingleScene from './scene/SingleScene';
 import { OrbitControls } from './controls/index';
 import Eventable from '../core/Eventable';
 
@@ -67,7 +68,7 @@ class QsThree {
         if (options.modelUrl) {
             this.#loadModel(options.modelUrl)
         }
-        this.#addSky()
+        this.#addLight()
         this.#loadControls()
         this.animate = this.#animate()
         this.animate.Play()
@@ -136,8 +137,8 @@ class QsThree {
         //body元素中插入canvas对象
         this.container.appendChild(this.renderer.domElement); 
     }
-    // 添加天空盒
-    #addSky() {
+    // 添加灯光
+    #addLight() {
         const ambientLight = new THREE.AmbientLight(0xffffff, .1); // 白光，强度为1
         this.scene.add(ambientLight);
         const dirLight1 = new THREE.DirectionalLight('rgb(253,253,253)', 2);
@@ -334,12 +335,20 @@ QsThree.prototype.getRenderer = function () {
     return this.renderer
 }
 /**
- * 获取渲染器
+ * 获取当前场景
  * @event QsThree#getScene
  * @return {Scene} scene 当前场景 scene
  */
 QsThree.prototype.getScene = function () {
     return this.scene
+}
+/**
+ * 设置新的场景
+ * @event QsThree#setScene
+ * @param {Scene} scene
+ */
+QsThree.prototype.setScene = function (scene) {
+    this.scene = scene
 }
 /**
  * 需要渲染的动画
@@ -363,4 +372,4 @@ QsThree.prototype.setControls = function (controls) {
 export { QsThree };
     
 export * from '../plugins/index'
-export { THREE, GLTFLoader } ;
+export { THREE, GLTFLoader, SingleScene} ;

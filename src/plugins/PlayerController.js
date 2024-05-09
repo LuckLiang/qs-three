@@ -50,7 +50,7 @@ class PlayerController extends EventDispatcher {
     if (jumpHeight) JumpHeight = jumpHeight 
     
     const size =getModelHeight(character);
-    CorrectionHeight = size.y
+    CorrectionHeight = 1.32;
     CharacterHeight = size.y;
     this.camera = camera;
     this.camera.lookAt(new THREE.Vector3(1, size.y, 0));
@@ -70,9 +70,8 @@ class PlayerController extends EventDispatcher {
     this.worldOctree = new Octree();
     this.worldOctree.fromGraphNode(world);
     this.playerCollider = new Capsule(
-      new THREE.Vector3(0, 0.35, 0),
-      new THREE.Vector3(0, CharacterHeight, 0),
-      0.6
+      new THREE.Vector3(0, 0.35, 0), new THREE.Vector3(0, 1, 0),
+      0.66
     );
 
     this.playerVelocity = new THREE.Vector3();

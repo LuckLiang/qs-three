@@ -8,6 +8,8 @@ import { EventDispatcher } from 'three';
  * @param {Scene} scene 场景
  * @param {Camera} camera 相机
  * @param {Renderer} renderer 渲染器
+ * @param {Object} options 
+ * @param {string} eventName=click 需要监听的鼠标事件，'click', 'dblclick', 'mousemove'
  * @example
  * // 引入
  * let ModelPicker = LThree.ModelPicker;
@@ -61,9 +63,9 @@ import { EventDispatcher } from 'three';
  *  });
  */
 class ModelPicker extends EventDispatcher {
-    constructor(scene, camera, renderer) {
+    constructor(scene, camera, renderer, options) {
         super();
-      
+        let { eventName='click' } = options
         this.scene = scene;
         this.camera = camera;
         this.renderer = renderer;
@@ -80,11 +82,11 @@ class ModelPicker extends EventDispatcher {
     }
     bindEvents() {
         const canvas = this.renderer.domElement;
-        canvas.addEventListener('click', this.onDocumentMouseClick.bind(this), false);
+        canvas.addEventListener(eventName, this.onDocumentMouseClick.bind(this), false);
     }
     unbindEvents() {
         const canvas = this.renderer.domElement;
-        canvas.removeEventListener('click', this.onDocumentMouseClick);
+        canvas.removeEventListener(eventName, this.onDocumentMouseClick);
     }
     onDocumentMouseClick(event) {
         const canvas = this.renderer.domElement;
