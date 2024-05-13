@@ -2,10 +2,9 @@ import { LCamera as Camera } from "./camera/index";
 import * as Renderer from "./renderer/index";
 import { LScene as Scene } from "./scene/index";
 import { GLTFLoader } from './modelLoader/index';
-import SingleScene from './scene/SingleScene';
 import { OrbitControls } from './controls/index';
 import Eventable from '../core/Eventable';
-
+import SingleScene from './scene/SingleScene';
 
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import * as THREE from 'three';
@@ -118,7 +117,7 @@ class QsThree {
         const k = width / height; //窗口宽高比
         const s = 75; //三维场景显示范围控制系数，系数越大，显示的范围越大
         //初始化相机
-        this.camera = new Camera(s, k, 0.1, 1000)
+        this.camera = new Camera(s, k, 0.1, 10000)
         this.camera.position.set(this.#cameraPos[0],this.#cameraPos[1],this.#cameraPos[2]);
         this.camera.lookAt(this.scene.position);
         
@@ -141,18 +140,22 @@ class QsThree {
     #addLight() {
         const ambientLight = new THREE.AmbientLight(0xffffff, .1); // 白光，强度为1
         this.scene.add(ambientLight);
-        const dirLight1 = new THREE.DirectionalLight('rgb(253,253,253)', 2);
-        const dirLight2 = new THREE.DirectionalLight('rgb(253,253,253)', 2);
-        const dirLight3 = new THREE.DirectionalLight('rgb(253,253,253)', 2);
-        const dirLight4 = new THREE.DirectionalLight('rgb(253,253,253)', 2);
-        dirLight1.position.set(60, 60, 60); // 根据需要自行调整位置
-        dirLight2.position.set(60, 60, -60); // 根据需要自行调整位置
-        dirLight3.position.set(-60, 60, 60); // 根据需要自行调整位置
-        dirLight4.position.set(-60, 60, -60); // 根据需要自行调整位置
-        this.scene.add(dirLight1);
-        this.scene.add(dirLight2);
-        this.scene.add(dirLight3);
-        this.scene.add(dirLight4);
+        const dirLight = new THREE.DirectionalLight('rgb(253,253,253)', 1);
+        dirLight.position.set(700, 700, 700); // 根据需要自行调整位置
+
+        dirLight.castShadow = true;
+        dirLight.shadow.camera.near = 1;
+        dirLight.shadow.camera.far = 10000;
+        dirLight.shadow.camera.right = 1500;
+        dirLight.shadow.camera.left = - 1500;
+        dirLight.shadow.camera.top	= 1500;
+        dirLight.shadow.camera.bottom = - 1500;
+        dirLight.shadow.mapSize.width = 1024;
+        dirLight.shadow.mapSize.height = 1024;
+        
+        // const helper = new THREE.CameraHelper( dirLight.shadow.camera );
+        // this.scene.add( helper );
+        this.scene.add(dirLight);
         this.scene.add( new THREE.HemisphereLight( this.#skyColor.value, this.#groundColor.value, .1 ) );
     }
     // 加载模型
@@ -244,7 +247,7 @@ class QsThree {
         this.controls.minDistance = 2;
         this.controls.autoRotate = this.#isRotation
         this.controls.autoRotateSpeed = this.#rotationSpeed
-        this.controls.maxPolarAngle = Math.PI * 0.5;
+        // this.controls.maxPolarAngle = Math.PI * 0.5;
     }    
     /**
      * 场景动画
@@ -369,7 +372,7 @@ QsThree.prototype.addRenderAnimate = function (func) {
 QsThree.prototype.setControls = function (controls) {
     this.controls = controls
 }
-export { QsThree };
-    
+
+export { QsThree };    
 export * from '../plugins/index'
-export { THREE, GLTFLoader, SingleScene} ;
+export { SingleScene,THREE, GLTFLoader};

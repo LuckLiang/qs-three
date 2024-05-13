@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { EventDispatcher } from 'three';
-
+let event
 /**
  * @class ModelPicker
  * @classdesc 模型选择器,用于鼠标点选模型
@@ -63,15 +63,15 @@ import { EventDispatcher } from 'three';
  *  });
  */
 class ModelPicker extends EventDispatcher {
-    constructor(scene, camera, renderer, options) {
+    constructor(scene, camera, renderer, options={}) {
         super();
-        let { eventName='click' } = options
+        let { eventName = 'click' } = options
+        event = eventName
         this.scene = scene;
         this.camera = camera;
         this.renderer = renderer;
         this.raycaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2();
-
         this.enabled = true; // 控制是否启用拾取功能
         // 可选：设置默认拾取选项
         this.pickOptions = {
@@ -82,11 +82,11 @@ class ModelPicker extends EventDispatcher {
     }
     bindEvents() {
         const canvas = this.renderer.domElement;
-        canvas.addEventListener(eventName, this.onDocumentMouseClick.bind(this), false);
+        canvas.addEventListener(event, this.onDocumentMouseClick.bind(this), false);
     }
     unbindEvents() {
         const canvas = this.renderer.domElement;
-        canvas.removeEventListener(eventName, this.onDocumentMouseClick);
+        canvas.removeEventListener(event, this.onDocumentMouseClick);
     }
     onDocumentMouseClick(event) {
         const canvas = this.renderer.domElement;

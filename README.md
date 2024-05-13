@@ -41,7 +41,11 @@ onMounted(() => {
   QsThree.animate();
 });
 ```
-
+## VUE3 演示项目地址
+```
+https://gitee.com/klus-liang/qs-three.-vue3.-vite.git
+```
 # 预览
 
 ![展示](./preview/Light.gif)
+![展示](./preview/weatherl.gif)
