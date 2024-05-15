@@ -10,13 +10,16 @@
 
 - 初始化相机为 PerspectiveCamera
 - 控制器为 OrbitControls
-- 灯光为 AmbientLight*1、DirectionalLight*4、HemisphereLight\*1
+- 灯光为 AmbientLight*1、DirectionalLight*1、HemisphereLight\*1
 - 渲染器默认为 WebGLRenderer
 
-# 开发计划
+# 已完成功能
 
-- 支持数据面板插入
+- 支持 dom 面板插入
+- 模型发光
+- 模型拾取
 - 支持第一/三人称控制器
+- 场景切换
 - 天气效果，如雨雪雾等天气
 
 # 安装
@@ -41,11 +44,9 @@ onMounted(() => {
   QsThree.animate();
 });
 ```
+
 ## VUE3 演示项目地址
+
 ```
 https://gitee.com/klus-liang/qs-three.-vue3.-vite.git
 ```
-# 预览
-
-![展示](./preview/Light.gif)
-![展示](./preview/weatherl.gif)

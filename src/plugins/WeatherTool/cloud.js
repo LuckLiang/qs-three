@@ -1,7 +1,8 @@
 import * as THREE from "three";
+import smoke from '../../assets/sprites/smoke.png';
 
 //Cloud.js
-const texture = new THREE.TextureLoader().load("http://localhost:8090/images/smoke.png"); //加载云朵素材
+const texture = new THREE.TextureLoader().load(smoke); //加载云朵素材
 const cloudGeo = new THREE.BufferGeometry(56, 30); //创建平面几何体
 const cloudMaterial = new THREE.MeshLambertMaterial({
   //图像作为纹理贴图，生成材质

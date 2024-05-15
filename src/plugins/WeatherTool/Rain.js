@@ -1,27 +1,40 @@
 import * as THREE from "three";
+import sprite1 from '../../assets/sprites/rain.png';
+import sprite2 from '../../assets/sprites/rain2.png';
+import sprite3 from '../../assets/sprites/rain3.png';
 
-//Rain.js
-let SCENE, COUNT = 1000, RANGE = 600, WIND=-0;
+const TEXTURES = [
+[[0.55, 1, 1], sprite2, 3],
+[[0.45, 1, 1], sprite3, 2],
+[[0.35, 1, 1], sprite1, 1],
+];
+let SCENE, COUNT, RANGE, WIND;
+
+/**
+ * @class Rain
+ * @classdesc 雨天控制器
+ * @constructor
+ * @param {THREE.Scene} scene
+ * @param {object} options
+ * @param {Array} options.textures 纹理数组 颜色:[[0.55, 1, 1],纹理图片路径：'http://localhost/images/rain.png',大小：3。示例[ [[0.55, 1, 1], 'http://localhost/images/rain.png', 3], ...]
+ * @param {Number} options.count=50 一平方米内雨量
+ * @param {Number} options.range=100 范围 
+ * @param {Number} options.wind=0 风向 左:-1， 右:1
+ */
+
 export default class Rain {
-  constructor(scene) {
+  constructor(scene, options={}) {
     SCENE = scene;
     this.gruop = new THREE.Group();
-    const sprite1 =
-      "http://localhost:8090/images/rain.png";
-    const sprite2 =
-      "http://localhost:8090/images/rain2.png";
-    const sprite3 =
-      "http://localhost:8090/images/rain3.png";
-
-    const parameters = [
-      [[0.55, 1, 1], sprite2, 3],
-      [[0.45, 1, 1], sprite3, 2],
-      [[0.35, 1, 1], sprite1, 1],
-    ];
-    for (let i = 0; i < parameters.length; i++) {
-      const color = parameters[i][0];
-      const textureUrl = parameters[i][1];
-      const size = parameters[i][2];
+    let { count=50, range=100, wind=0, textures= TEXTURES} = options
+    COUNT = count * range
+    RANGE = range
+    WIND = wind
+    
+    for (let i = 0; i < textures.length; i++) {
+      const color = textures[i][0];
+      const textureUrl = textures[i][1];
+      const size = textures[i][2];
       this.createPointCloud(COUNT, RANGE, size, textureUrl, color);
     }
   }
@@ -62,7 +75,7 @@ export default class Rain {
 
     const materials = new THREE.PointsMaterial({
       size: size,
-      map: textureloader.load(textureUrl),
+      map: textureloader.load(textureUrl, assignSRGB),
       blending: THREE.AdditiveBlending,
       depthTest: false,
       transparent: true,
@@ -74,3 +87,8 @@ export default class Rain {
     this.gruop.add(particles);
   }
 }
+const assignSRGB = ( texture ) => {
+
+  texture.colorSpace = THREE.SRGBColorSpace;
+
+};
