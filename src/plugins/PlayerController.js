@@ -122,8 +122,8 @@ class PlayerController extends EventDispatcher {
     document.addEventListener("keydown", (event) => {
       keyStates[event.code] = true;
       /**
-       * @event PlayerController#keyDown
        * 键盘按下事件
+       * @event PlayerController#keyDown
        */
       this.dispatchEvent(_keyDownEvent)
     });
@@ -131,8 +131,8 @@ class PlayerController extends EventDispatcher {
     document.addEventListener("keyup", (event) => {
       keyStates[event.code] = false;
       /**
-       * @event PlayerController#keyUph
        * 键盘弹起事件
+       * @event PlayerController#keyUp
        */
       this.dispatchEvent(_keyUpEvent)
     });
@@ -223,20 +223,20 @@ class PlayerController extends EventDispatcher {
     }
     if (keyStates["KeyA"] || keyStates["KeyD"] || keyStates["KeyS"] || keyStates["KeyW"]) {
       /**
-       * @event PlayerController#walk
        * 移动监听回调
+       * @event PlayerController#walk
        */
       this.dispatchEvent(_walkEvent);
     } else if (this.playerOnFloor && keyStates["Space"]) {
       /**
-       * @event PlayerController#jump
        * 跳跃监听回调
+       * @event PlayerController#jump
        */
       this.dispatchEvent(_jumpEvent);
     } else if (this.playerOnFloor && keyStates["KeyF"]) {
       /**
-       * @event PlayerController#switch
        * 视角转换监听回调
+       * @event PlayerController#switch
        */
       this.dispatchEvent(_switchPerspective);
     }
@@ -334,8 +334,8 @@ function onMouseMove(event) {
     camera.lookAt(this.character.position);
   }
   /**
-   * @event PlayerController#change
    * 鼠标移动回调
+   * @event PlayerController#change
    */
   this.dispatchEvent(_changeEvent);
 }
@@ -343,15 +343,15 @@ function onMouseMove(event) {
 function onPointerlockChange() {
   if (this.domElement.ownerDocument.pointerLockElement === this.domElement) {
     /**
-     * @event PlayerController#lock
      * 锁定鼠标回调
+     * @event PlayerController#lock
      */
     this.dispatchEvent(_lockEvent);
     this.isLocked = true;
   } else {
     /**
-     * @event PlayerController#unlock
      * 移除锁定鼠标回调
+     * @event PlayerController#unlock
      */
     this.dispatchEvent(_unlockEvent);
     this.isLocked = false;

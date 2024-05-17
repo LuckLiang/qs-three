@@ -48,10 +48,10 @@ const defaultOptions = {
  * 
  * @param {Object} options.snow 雪天配置项
  * @param {Object} options.snow.show 是否显示
- * * @param {Array} options.rain.textures 纹理数组 颜色:[[0.55, 1, 1],纹理图片路径：'http://localhost/images/snow.png',纹理大小：3。示例[ [[0.55, 1, 1], 'http://localhost/images/snow.png', 3], ...]
- * @param {Number} options.rain.count=50 一平方米内雪量
- * @param {Number} options.rain.range=100 范围 
- * @param {Number} options.rain.wind=0 风向 左:-1， 右:1
+ * * @param {Array} options.snow.textures 纹理数组 颜色:[[0.55, 1, 1],纹理图片路径：'http://localhost/images/snow.png',纹理大小：3。示例[ [[0.55, 1, 1], 'http://localhost/images/snow.png', 3], ...]
+ * @param {Number} options.snow.count=50 一平方米内雪量
+ * @param {Number} options.snow.range=100 范围 
+ * @param {Number} options.snow.wind=0 风向 左:-1， 右:1
  * 
  * @param {Object} options.light 闪电配置项
  * @param {Boolean} options.light.show=false 是否显示
@@ -64,6 +64,36 @@ const defaultOptions = {
  * @param {Number} options.fog.color=0xcccccc 颜色 一个表示颜色的 Color 的实例、字符串或数字，默认为一个白色（0xcccccc）的 Color 对象。
  * @param {Number} options.fog.density=0.025 定义雾的密度将会增长多块。
  *
+ * @example
+ * const weather = new WeatherTool(
+ *  qsThree.scene,
+ *  qsThree.camera,
+ *  qsThree.renderer,
+ *  {
+ *    rain: {
+ *      show: false,
+ *      count: 10,
+ *      range: 1000,
+ *      wind: 1,
+ *    },
+ *    snow: {
+ *      show: true,
+ *      count: 10,
+ *      range: 1000,
+ *      wind: 0,
+ *    },
+ *    light: {
+ *      show: false,
+ *    },
+ *    fog: {
+ *      show: true,
+ *    },
+ *  }
+ *);
+ *
+ *qsThree.addRenderAnimate(() => {
+ *  weather.animate();
+ *});
  */
 export default class WeatherTool {
   constructor(scene, camera, renderer, options = {}) {
@@ -105,6 +135,26 @@ export default class WeatherTool {
 
     //animate
     this.animate(); //requestAnimationFrame实现动画
+
+
+    this.updateOptions = function (options) {
+      let { rain, snow, light, fog } = options
+      if (rain) {
+        rainOptions = Object.assign(rainOptions, rain);
+        this.rainDrop&&rainDrop.updateOptions(rainOptions)
+      }
+      if (snow) {
+        snowOptions = Object.assign(snowOptions, snow);
+        this.snowDrop&&snowDrop.updateOptions(snowOptions)
+      }
+      if (light) {
+        lightOptions = Object.assign(lightOptions, light);
+      }
+      if (fog) {
+      fogOptions = Object.assign(fogOptions, fog);
+      }
+      this.animate();
+    }
   }
   addCloud() {
     this.clouds = [];

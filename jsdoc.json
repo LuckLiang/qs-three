@@ -38,7 +38,7 @@
         "inverseNav": true,
         "protocol": "html://",
         "methodHeadingReturns": false,
-        "sort": false
+        "sort": true
     },
     "opts": {
         "template": "D:\\nvm\\v20.10.0\\node_modules\\docdash",

@@ -37,6 +37,20 @@ export default class Rain {
       const size = textures[i][2];
       this.createPointCloud(COUNT, RANGE, size, textureUrl, color);
     }
+
+    /**
+     * 更新配置
+     * @param {Object} options 
+     * @param {Object} options.count
+     * @param {Object} options.range
+     * @param {Object} options.wind
+     */
+    this.updateOptions = function (options) { 
+      let { count, range, wind} = options
+      COUNT = count * range
+      RANGE = range
+      WIND = wind
+    }
   }
 
   animate() {
