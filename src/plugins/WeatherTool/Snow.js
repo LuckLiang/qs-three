@@ -11,17 +11,6 @@ const TEXTURES = [
   [[0.25, 1, 1], sprite5, 0.8],
   [[0.15, 1, 1], sprite4, 0.1],
 ];
-/**
- * @class Rain
- * @classdesc 雪天控制器
- * @constructor
- * @param {THREE.Scene} scene
- * @param {object} options
- * @param {Array} options.textures 纹理数组 颜色:[[0.55, 1, 1],纹理图片路径：'http://localhost/images/rain.png',大小：3。示例[ [[0.55, 1, 1], 'http://localhost/images/rain.png', 3], ...]
- * @param {Number} options.count=50 雨量一平方米内雨量
- * @param {Number} options.range=100 范围 
- * @param {Number} options.wind=0 风向 左:-1， 右:1
- */
 let SCENE, COUNT, RANGE, WIND;
 export default class Sonw {
   constructor(scene, options={}) {

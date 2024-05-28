@@ -42,9 +42,8 @@ const defaultOptions = {
  * @param {Object} options.rain 雨天配置项
  * @param {Boolean} options.rain.show 是否显示
  * @param {Array} options.rain.textures 纹理数组 颜色:[[0.55, 1, 1],纹理图片路径：'http://localhost/images/rain.png',纹理大小：3。示例[ [[0.55, 1, 1], 'http://localhost/images/rain.png', 3], ...]
- * @param {Number} options.rain.count=50 一平方米内雨量
+ * @param {Number} options.rain.count=50 1个范围内雨量
  * @param {Number} options.rain.range=100 范围 
- * @param {Number} options.rain.wind=0 风向 左:-1， 右:1
  * 
  * @param {Object} options.snow 雪天配置项
  * @param {Object} options.snow.show 是否显示
@@ -168,7 +167,7 @@ export default class WeatherTool {
     }
   }
   addRainDrop() {
-    this.rainDrop = new Rain(this.scene, rainOptions);
+    this.rainDrop = new Rain(this.scene,this.renderer,this.camera, rainOptions);
     this.scene.add(this.rainDrop.gruop);
   }
 

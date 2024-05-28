@@ -1,8 +1,9 @@
 {
-    "recurseDepth": 3,
+    "recurseDepth": 2,
     "source": {
         "include": [
-            "src/"
+            "src/qs-three",
+            "src/plugins"
         ],
         "includePattern": ".+\\.js(doc|x)?$",
         "exclude": [
@@ -28,7 +29,7 @@
         "dateFormat": "ddd MMM Do YYYY",
         "outputSourceFiles": false,
         "outputSourcePath": false,
-        "systemName": "HengYuan Map API",
+        "systemName": "HengYuan THREE API",
         "footer": "",
         "copyright": "&copy; <a href='http://www.hy9909.cn/' target='_blank'>恒源水务</a>",
         "navType": "inline",
@@ -38,18 +39,18 @@
         "inverseNav": true,
         "protocol": "html://",
         "methodHeadingReturns": false,
-        "sort": true
+        "sort": false
     },
     "opts": {
-        "template": "D:\\nvm\\v20.10.0\\node_modules\\docdash",
-        "encoding": "utf8",
+        "template": "./node_modules/ink-docstrap/template",
         "destination": "./docs/",
         "recurse": true,
+        "debug": true,
         "readme": "README.md"
     },
     "docdash": {
         "search": true,
-        "navLevel": 2,
+        "navLevel": 1,
         "collapse": true,
         "verbose": true
     }
