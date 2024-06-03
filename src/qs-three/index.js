@@ -424,9 +424,16 @@ QsThree.prototype.setControls = function (controls) {
  * @param {Object} opacity.color=#FF4127 围栏颜色
  * @returns {THREE.Mesh} mesh
  * @example
- * const mesh = qsThree.addShape();
- * mesh.rotateX(-Math.PI / 2);
- * mesh.position.set(20, 0, 0);
+ * const shape = qsThree.addShape();
+ * shape.rotateX(-Math.PI / 2);
+ * shape.position.set(20, 0, 0);
+ * 
+ * // 渲染器中动态刷新渲染
+ * render() {
+ * ...
+ * shape.material.uniforms.time.value += 0.01;
+ * }
+ *  
  */
 QsThree.prototype.addShape = function (options={}) {
   let { l = 20, w, h, color = "#FF4127" } = options;
@@ -515,6 +522,53 @@ QsThree.prototype.addShape = function (options={}) {
   this.scene.add(mesh);
   return mesh;
 };
+
+/**
+ * 添加管道
+ * @param {Array} points 管道位置数组
+ * @param {Object} options 
+ * @param {Number} options.tubularSegments=1000 组成这一管道的分段数
+ * @param {Number} options.radius=1 管道的半径
+ * @param {Number} options.radialSegments=100 管道横截面的分段数目
+ * @param {Boolean} options.closed=false 管道的两端是否闭合
+ * @param {THREE.Texture} options.textureURl=http://pic.yupoo.com/mazhenghjj/e546038d/9610773f.jpg 网格材质颜色贴图
+ * @param {Object} options.materialOptions Phong网格材质除颜色贴图外的其他配置项
+ * @returns {THREE.Mesh} mesh
+ * @example
+ * const tube = qsThree.addTube([[10,0,0],[12,0,0],...],{textureURl: '/assets/image/arrow.png'});
+ * 
+ * // 渲染器中动态刷新渲染
+ * render() {
+ *  ...
+ *  tube.material.map.offset.x -= 0.04;
+ * }
+ */
+QsThree.prototype.addTube = function (points, options = {}) {
+  let {tubularSegments=1000, radius=1, radialSegments=100, closed=false, textureURl='http://pic.yupoo.com/mazhenghjj/e546038d/9610773f.jpg',materialOptions={} } = options
+  let pointsArr = points.map((point) => new THREE.Vector3(...point)); // 将参数数组转换成点数组的形式
+	// 方法一：自定义三维路径 curvePath
+	const path = new THREE.CurvePath();
+	for (let i = 0; i < pointsArr.length - 1; i++) {
+		const lineCurve = new THREE.LineCurve3(pointsArr[i], pointsArr[i + 1]); // 每两个点之间形成一条三维直线
+		path.curves.push(lineCurve); // curvePath有一个curves属性，里面存放组成该三维路径的各个子路径
+  }
+  
+  const tubeGeometry = new THREE.TubeGeometry(path, tubularSegments, radius, radialSegments, closed);
+  const textureLoader = new THREE.TextureLoader();
+  const texture = textureLoader.load(textureURl);
+	// 设置阵列模式为 RepeatWrapping
+	texture.wrapS = THREE.RepeatWrapping
+	texture.wrapT = THREE.RepeatWrapping
+	texture.repeat.x = 50;
+	texture.repeat.y = 2;
+  texture.offset.y = 0.5;
+  const tubeMaterial = new THREE.MeshPhongMaterial({map:texture,...materialOptions});
+ 
+	// 设置数组材质对象作为网格模型材质参数
+	const mesh = new THREE.Mesh(tubeGeometry, tubeMaterial); //网格模型对象Mesh
+  this.scene.add(mesh); //网格模型添加到场景中
+  return mesh
+}
 
 export { QsThree };
 export * from "../plugins/index";
